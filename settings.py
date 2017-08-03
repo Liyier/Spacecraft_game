@@ -10,5 +10,4 @@ class Settings(object):
         # 屏幕设置
         self.screen_width = 1200
         self.screen_height = 800
-        self.bg_color = (230, 230, 230)
-        
+        self.bg_color = (230, 230, 230)   # 设置背景色 (r, g, b)-- 0~255
