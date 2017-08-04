@@ -18,7 +18,7 @@ def run_game():
     # surface component 屏幕对象
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
     # 飞船实例化
-    ship = Ship(screen)
+    ship = Ship(settings, screen)
     pygame.display.set_caption("Alien Invasion")   # set title
 
     # 开始游戏的主循环
