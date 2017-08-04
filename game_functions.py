@@ -16,8 +16,9 @@ def check_keydown_events(event, ship, settings, screen, bullets):
         ship.moving_left = True
     elif event.key == pygame.K_SPACE:
         # 创建一颗子弹并加入编组中
-        new_bullet = Bullet(settings, screen, ship)
-        bullets.add(new_bullet)
+        if len(bullets) < settings.bullets_allowed:
+            new_bullet = Bullet(settings, screen, ship)
+            bullets.add(new_bullet)
 
 
 def check_keyup_events(event, ship):
