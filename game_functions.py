@@ -46,9 +46,13 @@ def update_screen(settings, screen, ship, bullets):
     screen.fill(settings.bg_color)
     # 在飞船和外星人后面重绘所有子弹 sprites函数 返回一个列表
     for bullet in bullets.sprites():
-        bullet.update()
-        bullet.draw_bullet()
-    ship.update()  #
+        if bullet.rect.bottom <= 0:
+            bullets.remove(bullet)
+        else:
+            bullet.draw_bullet()
+    # Bullet继承于Sprite, 估计有update函数, 可以通过编组bullets调用
+    bullets.update()
+    ship.update()
     ship.blitme()
     # 让最近绘制的屏幕可见(绘制一个空屏幕，擦去旧屏幕)
     pygame.display.flip()
