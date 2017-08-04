@@ -4,10 +4,10 @@
 完成各种功能函数的调用
 """
 
-import sys
 import pygame
 from settings import Settings
 from ship import Ship
+import game_functions as gf  # 功能函数模块
 
 
 def run_game():
@@ -24,15 +24,8 @@ def run_game():
     # 开始游戏的主循环
     while True:
 
-        # 监督键盘和鼠标事件
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-
-        # 每循环一次重新填充一次屏幕
-        screen.fill(settings.bg_color)
-        ship.blitme()
-        # 让最近绘制的屏幕可见(绘制一个空屏幕，擦去旧屏幕)
-        pygame.display.flip()
+        gf.check_events(ship)
+        ship.update()
+        gf.update_screen(settings, screen, ship)
 
 run_game()
