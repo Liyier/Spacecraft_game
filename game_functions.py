@@ -6,6 +6,7 @@
 import sys
 import pygame
 from bullet import Bullet
+from alien import Alien
 
 
 def check_keydown_events(event, ship, settings, screen, bullets):
@@ -40,13 +41,15 @@ def check_events(ship, settings, bullets, screen):
             check_keyup_events(event, ship)
 
 
-def update_screen(settings, screen, ship, bullets):
+def update_screen(settings, screen, ship, bullets, aliens):
     """更新屏幕上的图像，并切换到新屏幕"""
     # 每循环一次重新填充一次屏幕
     screen.fill(settings.bg_color)
 
     ship.update()
     ship.blitme()
+    # 估计有self.image继承于Sprite的元素编组能够调用
+    aliens.draw(screen)
     # 在飞船和外星人后面重绘所有子弹
     update_bullets(bullets)
     # 让最近绘制的屏幕可见(绘制一个空屏幕，擦去旧屏幕)
@@ -70,3 +73,27 @@ def fire_bullet(settings, screen, ship, bullets):
     if len(bullets) < settings.bullets_allowed:
         new_bullet = Bullet(settings, screen, ship)
         bullets.add(new_bullet)
+
+
+def create_fleet(settings, screen, aliens):
+    """创建外星人群"""
+    alien = Alien(settings, screen)
+    aliens_number = get_aliens_number(settings, alien.rect.width)
+    for alien_number in range(aliens_number):
+        create_alien(settings, screen, aliens, alien_number)
+
+
+def get_aliens_number(settings, alien_width):
+    """计算每行可以容纳多少人"""
+    available_space = settings.screen_width - 2*alien_width
+    aliens_number = int(available_space/(2*alien_width))
+    return aliens_number
+
+
+def create_alien(settings, screen, aliens, alien_number):
+    """创建一个外星人并把他放在当前行"""
+    alien = Alien(settings, screen)
+    alien_width = alien.rect.width
+    alien.x = alien_width + 2*alien_width*alien_number
+    alien.rect.x = alien.x
+    aliens.add(alien)
