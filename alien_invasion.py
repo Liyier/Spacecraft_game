@@ -27,7 +27,7 @@ def run_game():
     bullets = Group()
     # 存储外星人的编组
     aliens = Group()
-    gf.create_fleet(settings, screen, aliens)
+    gf.create_fleet(settings, screen, aliens, ship)
     
     # 开始游戏的主循环
     while True:
