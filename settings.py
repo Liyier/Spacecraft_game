@@ -16,11 +16,11 @@ class Settings(object):
         self.ship_speed_factor = 1.5
 
         # 子弹设置
-        self.bullet_speed_factor = 1
+        self.bullet_speed_factor = 3
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = (60, 60, 60)
-        self.bullets_allowed = 5
+        self.bullets_allowed = 10
 
         # 外星人设置
         self.alien_speed_factor = 1
