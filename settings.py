@@ -23,3 +23,8 @@ class Settings(object):
         self.bullets_allowed = 5
 
         # 外星人设置
+        self.alien_speed_factor = 1
+        # 整群外星人direction 1为向右,-1为向左
+        self.fleet_direction = 1
+        # 下降速度
+        self.fleet_drop_speed = 10

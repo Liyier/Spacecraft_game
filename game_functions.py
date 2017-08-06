@@ -45,26 +45,30 @@ def update_screen(settings, screen, ship, bullets, aliens):
     """更新屏幕上的图像，并切换到新屏幕"""
     # 每循环一次重新填充一次屏幕
     screen.fill(settings.bg_color)
-
-    ship.update()
     ship.blitme()
     # 估计有self.image继承于Sprite的元素编组能够调用
     aliens.draw(screen)
     # 在飞船和外星人后面重绘所有子弹
-    update_bullets(bullets)
+    draw_bullets(bullets)
     # 让最近绘制的屏幕可见(绘制一个空屏幕，擦去旧屏幕)
     pygame.display.flip()
 
 
-def update_bullets(bullets):
+def update_bullets(bullets, aliens):
     """更新子弹的位置，并删除已消失的子弹"""
     bullets.update()
     # Bullet继承于Sprite, 估计有update函数, 可以通过编组bullets调用,sprites函数 返回一个列表
     for bullet in bullets.sprites():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
-        else:
-            bullet.draw_bullet()
+    # 检查是否有子弹击中了外星人, 有就删除相应的子弹和外星人
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+
+
+def draw_bullets(bullets):
+    """绘制子弹编组"""
+    for bullet in bullets:
+        bullet.draw_bullet()
 
 
 def fire_bullet(settings, screen, ship, bullets):
@@ -107,3 +111,24 @@ def get_rows_nunber(settings, ship_height, alien_height):
     available_space_y = settings.screen_height - 3*alien_height - ship_height
     rows_number = int(available_space_y/(2*alien_height))
     return rows_number
+
+
+def update_aliens(settings, aliens):
+    """更新飞船位置"""
+    check_fleet_edges(settings, aliens)
+    aliens.update()
+
+
+def change_fleet_direction(settings, aliens):
+    """将整群外星人下移,并改变他们的方向"""
+    for alien in aliens:
+        alien.rect.y += settings.fleet_drop_speed
+    settings.fleet_direction *= -1
+
+
+def check_fleet_edges(settings, aliens):
+    """有外星人到达边缘就采取相应的措施"""
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_direction(settings, aliens)
+            break
