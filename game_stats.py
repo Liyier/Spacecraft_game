@@ -9,7 +9,7 @@ class GameStats(object):
         """初始化统计信息"""
         self.settings = settings
         # 游戏启动时处于活跃状态
-        self.game_active = True
+        self.game_active = False
         self.reset_stats()
 
     def reset_stats(self):

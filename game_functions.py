@@ -42,7 +42,7 @@ def check_events(ship, settings, bullets, screen):
             check_keyup_events(event, ship)
 
 
-def update_screen(settings, screen, ship, bullets, aliens):
+def update_screen(settings, screen, ship, bullets, aliens, stats, play_button):
     """更新屏幕上的图像，并切换到新屏幕"""
     # 每循环一次重新填充一次屏幕
     screen.fill(settings.bg_color)
@@ -52,6 +52,8 @@ def update_screen(settings, screen, ship, bullets, aliens):
     # 在飞船和外星人后面重绘所有子弹
     draw_bullets(bullets)
     # 让最近绘制的屏幕可见(绘制一个空屏幕，擦去旧屏幕)
+    if not stats.game_active:
+        play_button.draw_button()
     pygame.display.flip()
 
 

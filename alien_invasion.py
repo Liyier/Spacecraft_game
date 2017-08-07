@@ -11,6 +11,7 @@ import game_functions as gf  # 功能函数模块
 from pygame.sprite import Group
 from alien import Alien
 from game_stats import GameStats
+from button import Button
 
 
 def run_game():
@@ -26,6 +27,8 @@ def run_game():
     alien = Alien(settings, screen)
     # 创建存储游戏 统计信息的实例
     stats = GameStats(settings)
+    # 创建一个按钮
+    play_button = Button(settings, screen, 'play')
     pygame.display.set_caption("Alien Invasion")   # set title
     # 创建一个存储子弹的编组
     bullets = Group()
@@ -41,6 +44,6 @@ def run_game():
             ship.update()
             gf.update_bullets(bullets, aliens, settings, screen, ship)
             gf.update_aliens(settings, aliens, ship, stats, screen, bullets)
-        gf.update_screen(settings, screen, ship, bullets, aliens)
+        gf.update_screen(settings, screen, ship, bullets, aliens, stats, play_button)
 
 run_game()
