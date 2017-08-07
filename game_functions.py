@@ -7,6 +7,7 @@ import sys
 import pygame
 from bullet import Bullet
 from alien import Alien
+from time import sleep
 
 
 def check_keydown_events(event, ship, settings, screen, bullets):
@@ -122,10 +123,13 @@ def get_rows_nunber(settings, ship_height, alien_height):
     return rows_number
 
 
-def update_aliens(settings, aliens):
+def update_aliens(settings, aliens, ship, stats, screen, bullets):
     """更新飞船位置"""
     check_fleet_edges(settings, aliens)
     aliens.update()
+    if pygame.sprite.spritecollideany(ship, aliens):
+        ship_hit(settings, stats, screen, ship, aliens, bullets)
+    check_aliens_bottom(settings, stats, screen, ship, aliens, bullets)
 
 
 def change_fleet_direction(settings, aliens):
@@ -140,4 +144,31 @@ def check_fleet_edges(settings, aliens):
     for alien in aliens.sprites():
         if alien.check_edges():
             change_fleet_direction(settings, aliens)
+            break
+
+
+def ship_hit(settings, stats, screen, ship, aliens, bullets):
+    """响应外星人撞倒飞船"""
+    if stats.ships_left > 0:
+        # ship -1
+        stats.ships_left -= 1
+        # 清空外星人和子弹列表
+        aliens.empty()
+        bullets.empty()
+        # 创建新的外星人群, 并将飞船放到屏幕底端中央
+        create_fleet(settings, screen, aliens, ship)
+        ship.center_ship()
+        # 暂停
+        sleep(0.5)
+    else:
+        stats.game_active = False
+
+
+def check_aliens_bottom(settings, stats, screen, ship, aliens, bullets):
+    """检查是否有外星人到达屏幕底部"""
+    screen_rect = screen.get_rect()
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            # 向下是y坐标增大
+            ship_hit(settings, stats, screen, ship, aliens, bullets)
             break

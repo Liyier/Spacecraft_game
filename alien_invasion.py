@@ -10,6 +10,8 @@ from ship import Ship
 import game_functions as gf  # 功能函数模块
 from pygame.sprite import Group
 from alien import Alien
+from game_stats import GameStats
+
 
 def run_game():
     """初始化游戏并创建一个屏幕对象"""
@@ -22,6 +24,8 @@ def run_game():
     ship = Ship(settings, screen)
     # 外星人实例化
     alien = Alien(settings, screen)
+    # 创建存储游戏 统计信息的实例
+    stats = GameStats(settings)
     pygame.display.set_caption("Alien Invasion")   # set title
     # 创建一个存储子弹的编组
     bullets = Group()
@@ -33,9 +37,10 @@ def run_game():
     while True:
 
         gf.check_events(ship, settings, bullets, screen)
-        ship.update()
-        gf.update_bullets(bullets, aliens, settings, screen, ship)
-        gf.update_aliens(settings, aliens)
+        if stats.game_active:
+            ship.update()
+            gf.update_bullets(bullets, aliens, settings, screen, ship)
+            gf.update_aliens(settings, aliens, ship, stats, screen, bullets)
         gf.update_screen(settings, screen, ship, bullets, aliens)
 
 run_game()

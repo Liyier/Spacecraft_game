@@ -44,3 +44,7 @@ class Ship(object):
 
         # 根据self.center(浮点数)更新rect(rect的centerx只接受整数)对象
         self.rect.centerx = self.center
+
+    def center_ship(self):
+        """重置飞船到屏幕底部中央"""
+        self.center = self.screen_rect.centerx

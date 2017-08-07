@@ -14,6 +14,7 @@ class Settings(object):
 
         # 飞船设置
         self.ship_speed_factor = 1.5
+        self.ship_limit = 3
 
         # 子弹设置
         self.bullet_speed_factor = 3
@@ -27,4 +28,4 @@ class Settings(object):
         # 整群外星人direction 1为向右,-1为向左
         self.fleet_direction = 1
         # 下降速度
-        self.fleet_drop_speed = 10
+        self.fleet_drop_speed = 40
