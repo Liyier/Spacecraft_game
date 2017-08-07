@@ -31,7 +31,7 @@ def check_keyup_events(event, ship):
         ship.moving_left = False
 
 
-def check_events(ship, settings, bullets, screen):
+def check_events(ship, settings, bullets, screen, stats, play_button):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -40,6 +40,9 @@ def check_events(ship, settings, bullets, screen):
             check_keydown_events(event, ship, settings, screen, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            check_play_button(stats, play_button, mouse_x, mouse_y)
 
 
 def update_screen(settings, screen, ship, bullets, aliens, stats, play_button):
@@ -174,3 +177,9 @@ def check_aliens_bottom(settings, stats, screen, ship, aliens, bullets):
             # 向下是y坐标增大
             ship_hit(settings, stats, screen, ship, aliens, bullets)
             break
+
+
+def check_play_button(stats, play_button, mouse_x, mouse_y):
+    """在玩家单击play按钮时开始游戏"""
+    if play_button.rect.collidepoint(mouse_x, mouse_y):
+        stats.game_active = True

@@ -39,7 +39,7 @@ def run_game():
     # 开始游戏的主循环
     while True:
 
-        gf.check_events(ship, settings, bullets, screen)
+        gf.check_events(ship, settings, bullets, screen, stats, play_button)
         if stats.game_active:
             ship.update()
             gf.update_bullets(bullets, aliens, settings, screen, ship)
