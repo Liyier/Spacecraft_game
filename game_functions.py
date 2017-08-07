@@ -31,7 +31,7 @@ def check_keyup_events(event, ship):
         ship.moving_left = False
 
 
-def check_events(ship, settings, bullets, screen, stats, play_button):
+def check_events(ship, settings, bullets, screen, stats, play_button, aliens):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -42,7 +42,7 @@ def check_events(ship, settings, bullets, screen, stats, play_button):
             check_keyup_events(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(stats, play_button, mouse_x, mouse_y)
+            check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bullets, screen, ship)
 
 
 def update_screen(settings, screen, ship, bullets, aliens, stats, play_button):
@@ -154,9 +154,9 @@ def check_fleet_edges(settings, aliens):
 
 def ship_hit(settings, stats, screen, ship, aliens, bullets):
     """响应外星人撞倒飞船"""
+    # ship -1
+    stats.ships_left -= 1
     if stats.ships_left > 0:
-        # ship -1
-        stats.ships_left -= 1
         # 清空外星人和子弹列表
         aliens.empty()
         bullets.empty()
@@ -167,6 +167,7 @@ def ship_hit(settings, stats, screen, ship, aliens, bullets):
         sleep(0.5)
     else:
         stats.game_active = False
+        pygame.mouse.set_visible(True)
 
 
 def check_aliens_bottom(settings, stats, screen, ship, aliens, bullets):
@@ -179,7 +180,20 @@ def check_aliens_bottom(settings, stats, screen, ship, aliens, bullets):
             break
 
 
-def check_play_button(stats, play_button, mouse_x, mouse_y):
+def check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bullets, screen, ship):
     """在玩家单击play按钮时开始游戏"""
-    if play_button.rect.collidepoint(mouse_x, mouse_y):
+    button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked and not stats.game_active:
+        # 隐藏光标
+        pygame.mouse.set_visible(False)
+        # 重置游戏统计信息
+        stats.reset_stats()
         stats.game_active = True
+
+        # 清空外星人列表和子弹列表
+        aliens.empty()
+        bullets.empty()
+
+        # 创建一群新的外星人，并让飞船居中
+        create_fleet(settings, screen, aliens, ship)
+        ship.center_ship()
