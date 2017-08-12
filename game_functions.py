@@ -45,7 +45,7 @@ def check_events(ship, settings, bullets, screen, stats, play_button, aliens):
             check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bullets, screen, ship)
 
 
-def update_screen(settings, screen, ship, bullets, aliens, stats, play_button):
+def update_screen(settings, screen, ship, bullets, aliens, stats, play_button, score_board):
     """更新屏幕上的图像，并切换到新屏幕"""
     # 每循环一次重新填充一次屏幕
     screen.fill(settings.bg_color)
@@ -54,9 +54,11 @@ def update_screen(settings, screen, ship, bullets, aliens, stats, play_button):
     aliens.draw(screen)
     # 在飞船和外星人后面重绘所有子弹
     draw_bullets(bullets)
-    # 让最近绘制的屏幕可见(绘制一个空屏幕，擦去旧屏幕)
+    # 显示得分
+    score_board.show_score()
     if not stats.game_active:
         play_button.draw_button()
+    # 让最近绘制的屏幕可见(绘制一个空屏幕，擦去旧屏幕)
     pygame.display.flip()
 
 
@@ -99,7 +101,7 @@ def create_fleet(settings, screen, aliens, ship):
     """创建外星人群"""
     alien = Alien(settings, screen)
     aliens_number = get_aliens_number(settings, alien.rect.width)
-    rows_number = get_rows_nunber(settings, ship.rect.height, alien.rect.height)
+    rows_number = get_rows_number(settings, ship.rect.height, alien.rect.height)
     for row_number in range(rows_number):
         for alien_number in range(aliens_number):
             create_alien(settings, screen, aliens, alien_number, row_number)
@@ -122,7 +124,7 @@ def create_alien(settings, screen, aliens, alien_number, row_number):
     aliens.add(alien)
 
 
-def get_rows_nunber(settings, ship_height, alien_height):
+def get_rows_number(settings, ship_height, alien_height):
     """计算屏幕可以容纳多少行外星人"""
     available_space_y = settings.screen_height - 3*alien_height - ship_height
     rows_number = int(available_space_y/(2*alien_height))
