@@ -77,6 +77,7 @@ def check_bullet_alien_collisions(settings, screen, ship, aliens, bullets):
     if len(aliens) == 0:
         # 删除现有的子弹并新建一群外星人
         bullets.empty()
+        settings.increase_speed()
         create_fleet(settings, screen, aliens, ship)
 
 
@@ -189,7 +190,8 @@ def check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bu
         # 重置游戏统计信息
         stats.reset_stats()
         stats.game_active = True
-
+        # 重置游戏设置
+        settings.initialize_dynamic_settings()
         # 清空外星人列表和子弹列表
         aliens.empty()
         bullets.empty()

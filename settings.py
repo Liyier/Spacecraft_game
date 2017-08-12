@@ -17,7 +17,7 @@ class Settings(object):
         self.ship_limit = 3
 
         # 子弹设置
-        self.bullet_speed_factor = 3
+        self.bullet_speed_factor = 5
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = (60, 60, 60)
@@ -28,4 +28,22 @@ class Settings(object):
         # 整群外星人direction 1为向右,-1为向左
         self.fleet_direction = 1
         # 下降速度
-        self.fleet_drop_speed = 40
+        self.fleet_drop_speed = 10
+
+        # 加快游戏节奏
+        self.speed_up_scale = 1.1
+
+        self.initialize_dynamic_settings()
+
+    def initialize_dynamic_settings(self):
+        """初始化随游戏进行而变化的设置"""
+        self.ship_speed_factor = 1.5
+        self.bullet_speed_factor = 3
+        self.alien_speed_factor = 1
+
+        self.fleet_direction = 1
+
+    def increase_speed(self):
+        self.ship_speed_factor *= self.speed_up_scale
+        self.alien_speed_factor *= self.speed_up_scale
+        self.alien_speed_factor *= self.speed_up_scale
