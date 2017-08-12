@@ -11,3 +11,8 @@ while writing code while watching ti in the early morning(ti--> the internationa
 ------------------2017.8.5@yier-----------------
 Complete the first part
 now add alien into the game
+
+------------------2017.8.13@yier-----------------
+the international 7 in the deep night
+cn dota cheer up. wish newbee get the champion
+now  add a score function and finish this project
