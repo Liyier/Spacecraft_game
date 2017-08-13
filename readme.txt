@@ -16,3 +16,4 @@ now add alien into the game
 the international 7 in the deep night
 cn dota cheer up. wish newbee get the champion
 now  add a score function and finish this project
+fixing !

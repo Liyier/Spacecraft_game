@@ -5,15 +5,18 @@ pygame 处理rect(矩形)一样处理游戏元素
 rect对象有center(估计是元组),centerx,centery等属性
 """
 import pygame
+from pygame.sprite import Sprite
 
 
-class Ship(object):
+class Ship(Sprite):
 
     def __init__(self, settings, screen):
         """
         初始化飞船斌获取其初始位置
         通过形参settings获取一些飞船设置
         """
+        super(Ship, self).__init__()
+
         self.screen = screen
         self.settings = settings
         # 加载飞船图像并获取其外接矩形

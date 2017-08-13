@@ -141,13 +141,13 @@ def get_rows_number(settings, ship_height, alien_height):
     return rows_number
 
 
-def update_aliens(settings, aliens, ship, stats, screen, bullets):
+def update_aliens(settings, aliens, ship, stats, screen, bullets, score_board):
     """更新飞船位置"""
     check_fleet_edges(settings, aliens)
     aliens.update()
     if pygame.sprite.spritecollideany(ship, aliens):
-        ship_hit(settings, stats, screen, ship, aliens, bullets)
-    check_aliens_bottom(settings, stats, screen, ship, aliens, bullets)
+        ship_hit(settings, stats, screen, ship, aliens, bullets, score_board)
+    check_aliens_bottom(settings, stats, screen, ship, aliens, bullets, score_board)
 
 
 def change_fleet_direction(settings, aliens):
@@ -165,10 +165,11 @@ def check_fleet_edges(settings, aliens):
             break
 
 
-def ship_hit(settings, stats, screen, ship, aliens, bullets):
+def ship_hit(settings, stats, screen, ship, aliens, bullets, score_board):
     """响应外星人撞倒飞船"""
     # ship -1
     stats.ships_left -= 1
+    score_board.prep_ship()
     if stats.ships_left > 0:
         # 清空外星人和子弹列表
         aliens.empty()
@@ -184,13 +185,13 @@ def ship_hit(settings, stats, screen, ship, aliens, bullets):
         pygame.mouse.set_visible(True)
 
 
-def check_aliens_bottom(settings, stats, screen, ship, aliens, bullets):
+def check_aliens_bottom(settings, stats, screen, ship, aliens, bullets, score_board):
     """检查是否有外星人到达屏幕底部"""
     screen_rect = screen.get_rect()
     for alien in aliens.sprites():
         if alien.rect.bottom >= screen_rect.bottom:
             # 向下是y坐标增大
-            ship_hit(settings, stats, screen, ship, aliens, bullets)
+            ship_hit(settings, stats, screen, ship, aliens, bullets, score_board)
             break
 
 
@@ -208,6 +209,7 @@ def check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bu
         # 重置记分牌
         score_board.prep_score()
         score_board.prep_level()
+        score_board.prep_ship()
         # 清空外星人列表和子弹列表
         aliens.empty()
         bullets.empty()

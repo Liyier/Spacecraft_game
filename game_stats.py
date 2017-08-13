@@ -11,12 +11,10 @@ class GameStats(object):
         # 最高得分 不会被重置
         with open('record.txt') as f:
             s = f.read()
-            print(s)
             if not s:
                 self.highest_score = 0
             else:
                 self.highest_score = int(s)
-        print(self.highest_score)
         # 游戏启动时处于活跃状态
         self.game_active = False
         self.reset_stats()
