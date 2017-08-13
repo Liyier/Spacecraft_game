@@ -20,7 +20,9 @@ class Score(object):
 
     def prep_score(self):
         """将得分转换成一幅渲染的图像"""
-        score_str = str(self.stats.score)
+        # 将得分圆整
+        rounded_score = round(self.stats.score, -1)  # -1 取10的整数倍
+        score_str = '{:,}'.format(rounded_score)
         self.score_image = self.font.render(score_str, True, self.text_color, self.settings.bg_color)
 
         # 将屏幕放在屏幕右上角

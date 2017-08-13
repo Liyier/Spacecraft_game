@@ -8,6 +8,13 @@ class GameStats(object):
     def __init__(self, settings):
         """初始化统计信息"""
         self.settings = settings
+        # 最高得分 不会被重置
+        with open('record.txt', 'w+') as f:
+            s = f.read()
+            if not s:
+                self.highest_score = 0
+            else:
+                self.highest_score = int(s)
         # 游戏启动时处于活跃状态
         self.game_active = False
         self.reset_stats()

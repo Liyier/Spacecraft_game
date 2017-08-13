@@ -8,9 +8,10 @@ import pygame
 from bullet import Bullet
 from alien import Alien
 from time import sleep
+from datetime import datetime
 
 
-def check_keydown_events(event, ship, settings, screen, bullets):
+def check_keydown_events(event, ship, settings, screen, bullets, stats):
     """响应按键"""
     if event.key == pygame.K_RIGHT:
         ship.moving_right = True
@@ -19,6 +20,7 @@ def check_keydown_events(event, ship, settings, screen, bullets):
     elif event.key == pygame.K_SPACE:
         fire_bullet(settings, screen, ship, bullets)
     elif event.key == pygame.K_ESCAPE:
+        recording(stats)
         sys.exit()
 
 
@@ -35,9 +37,10 @@ def check_events(ship, settings, bullets, screen, stats, play_button, aliens):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            recording(stats)
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, ship, settings, screen, bullets)
+            check_keydown_events(event, ship, settings, screen, bullets, stats)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -62,20 +65,24 @@ def update_screen(settings, screen, ship, bullets, aliens, stats, play_button, s
     pygame.display.flip()
 
 
-def update_bullets(bullets, aliens, settings, screen, ship):
+def update_bullets(bullets, aliens, settings, screen, ship, stats, score_board):
     """更新子弹的位置，并删除已消失的子弹"""
     bullets.update()
     # Bullet继承于Sprite, 估计有update函数, 可以通过编组bullets调用,sprites函数 返回一个列表
     for bullet in bullets.sprites():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
-    check_bullet_alien_collisions(settings, screen, ship, aliens, bullets)
+    check_bullet_alien_collisions(settings, screen, ship, aliens, bullets, stats, score_board)
 
 
-def check_bullet_alien_collisions(settings, screen, ship, aliens, bullets):
+def check_bullet_alien_collisions(settings, screen, ship, aliens, bullets,stats, score_board):
     """响应子弹和外星人的碰撞"""
     # 检查是否有子弹击中了外星人, 有就删除相应的子弹和外星人
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    if collisions:
+        for aliens in collisions.values():
+            stats.score += settings.alien_points
+            score_board.prep_score()
     if len(aliens) == 0:
         # 删除现有的子弹并新建一群外星人
         bullets.empty()
@@ -169,6 +176,7 @@ def ship_hit(settings, stats, screen, ship, aliens, bullets):
         # 暂停
         sleep(0.5)
     else:
+        recording(stats)
         stats.game_active = False
         pygame.mouse.set_visible(True)
 
@@ -201,3 +209,13 @@ def check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bu
         # 创建一群新的外星人，并让飞船居中
         create_fleet(settings, screen, aliens, ship)
         ship.center_ship()
+
+def recording(stats):
+    """记录最高分数"""
+    if stats.score > stats.highest_score:
+        stats.highest_score = stats.score
+        with open('record.txt', 'a') as f:
+            f.write(str(stats.highest_score))
+            print('high_score : {0}\t {1}\n'.format(stats.highest_score, datetime.now()))
+    else:
+        return
