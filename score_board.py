@@ -17,6 +17,7 @@ class Score(object):
 
         # 准备初始得分图像
         self.prep_score()
+        self.prep_level()
 
     def prep_score(self):
         """将得分转换成一幅渲染的图像"""
@@ -30,6 +31,14 @@ class Score(object):
         self.score_rect.right = self.screen_rect.right - 20
         self.score_rect.top = 20
 
+    def prep_level(self):
+        self.level_image = self.font.render(str(self.stats.level), True, self.text_color, self.settings.bg_color)
+        self.level_rect = self.level_image.get_rect()
+        self.level_rect.right = self.score_rect.right
+        self.level_rect.top = self.score_rect.bottom+10
+
+
     def show_score(self):
         """在屏幕显示得分"""
         self.screen.blit(self.score_image, self.score_rect)
+        self.screen.blit(self.level_image, self.level_rect)

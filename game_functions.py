@@ -33,7 +33,7 @@ def check_keyup_events(event, ship):
         ship.moving_left = False
 
 
-def check_events(ship, settings, bullets, screen, stats, play_button, aliens):
+def check_events(ship, settings, bullets, screen, stats, play_button, aliens, score_board):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -45,7 +45,7 @@ def check_events(ship, settings, bullets, screen, stats, play_button, aliens):
             check_keyup_events(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bullets, screen, ship)
+            check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bullets, screen, ship, score_board)
 
 
 def update_screen(settings, screen, ship, bullets, aliens, stats, play_button, score_board):
@@ -87,6 +87,9 @@ def check_bullet_alien_collisions(settings, screen, ship, aliens, bullets,stats,
         # 删除现有的子弹并新建一群外星人
         bullets.empty()
         settings.increase_speed()
+        # 提高等级
+        stats.level += 1
+        score_board.prep_level()
         create_fleet(settings, screen, aliens, ship)
 
 
@@ -191,7 +194,7 @@ def check_aliens_bottom(settings, stats, screen, ship, aliens, bullets):
             break
 
 
-def check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bullets, screen, ship):
+def check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bullets, screen, ship, score_board):
     """在玩家单击play按钮时开始游戏"""
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not stats.game_active:
@@ -202,6 +205,9 @@ def check_play_button(stats, play_button, mouse_x, mouse_y, settings, aliens, bu
         stats.game_active = True
         # 重置游戏设置
         settings.initialize_dynamic_settings()
+        # 重置记分牌
+        score_board.prep_score()
+        score_board.prep_level()
         # 清空外星人列表和子弹列表
         aliens.empty()
         bullets.empty()
@@ -214,7 +220,7 @@ def recording(stats):
     """记录最高分数"""
     if stats.score > stats.highest_score:
         stats.highest_score = stats.score
-        with open('record.txt', 'a') as f:
+        with open('record.txt', 'w') as f:
             f.write(str(stats.highest_score))
             print('high_score : {0}\t {1}\n'.format(stats.highest_score, datetime.now()))
     else:
